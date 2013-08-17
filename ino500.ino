@@ -1,11 +1,12 @@
-//vim: filetype=c
+//vim: filetype=cpp
 #include <Wire.h>
 #include <Adafruit_BMP085.h>
 #include "Adafruit_MAX31855.h"
 #include <LiquidCrystal.h>
 
-#define COLS = 16
-#define ROWS = 2
+#define COLS 16
+#define ROWS 2
+
 // LM35 pin:
 int sensorPin = 0;
 // 31855 pins:
@@ -20,13 +21,11 @@ Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 
 void setup() {
   // set up the LCD's number of columns and rows: 
-  lcd.begin(16, 2);
+  lcd.begin(COLS, ROWS);
   Serial.begin(9600);  //Start the serial connection with the computer
                        //to view the result open the serial monitor
   if (!bmp.begin()) {
     Serial.println("Could not find a valid BMP085 sensor, check wiring!");
-    while (1) {
-    }
   }
 }
 
@@ -45,12 +44,10 @@ void reverse(char s[]) {
 void format(double val, char buf[]) {
   int i, sig, sign;
 
-  sig = (int)val;
-  unsigned int frac;
+  sig = (int)val;    // significant part
+  unsigned int frac; // fraction part
 
-  if ((sign = sig) < 0) {
-    sig = -sig;
-  }
+  if ((sign = sig) < 0) { sig = -sig; } // make positive
 
   frac = (val * 10000 - sig * 10000);
 
@@ -80,20 +77,20 @@ void loop()                     // run over and over again
   double term_temp    = thermocouple.readCelsius();
 
   // Build string for display on LCD:
-  char lt[8] = "0000000"; 
+  char lt[9] = "********"; 
   format(lm35_temp, lt);
   
-  char bt[8] = "0000000"; 
+  char bt[9] = "********"; 
   format(bmp_temp, bt);
   
-  char bp[8] = "0000000"; 
+  char bp[9] = "********"; 
   format(bmp_pressure, bp);
   
-  char tt[8] = "0000000"; 
+  char tt[9] = "********"; 
   format(term_temp, tt);
   
-  char line1[16] = "                ";
-  char line2[16] = "                ";
+  char line1[17] = "^^^^^^^^^^^^^^^^";
+  char line2[17] = "^^^^^^^^^^^^^^^^";
   sprintf(line1, "K:%5.5s P:%5.5s ", tt, bp);
   sprintf(line2, "RT:%4.4s HT:%4.4s ", bt, lt);
 
