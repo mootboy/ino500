@@ -1,8 +1,11 @@
+//vim: filetype=c
 #include <Wire.h>
 #include <Adafruit_BMP085.h>
 #include "Adafruit_MAX31855.h"
 #include <LiquidCrystal.h>
 
+#define COLS = 16
+#define ROWS = 2
 // LM35 pin:
 int sensorPin = 0;
 // 31855 pins:
@@ -19,7 +22,7 @@ void setup() {
   // set up the LCD's number of columns and rows: 
   lcd.begin(16, 2);
   Serial.begin(9600);  //Start the serial connection with the computer
-  //to view the result open the serial monitor
+                       //to view the result open the serial monitor
   if (!bmp.begin()) {
     Serial.println("Could not find a valid BMP085 sensor, check wiring!");
     while (1) {
@@ -89,11 +92,10 @@ void loop()                     // run over and over again
   char tt[8] = "0000000"; 
   format(term_temp, tt);
   
-  char line1[16] = "               ";
-  char line2[16] = "               ";
-
-  sprintf(line1, "K:%4.5s P:%4.5s", tt, bp);
-  sprintf(line2, "RT:%4.4s HT:%4.4s", bt, lt);
+  char line1[16] = "                ";
+  char line2[16] = "                ";
+  sprintf(line1, "K:%5.5s P:%5.5s ", tt, bp);
+  sprintf(line2, "RT:%4.4s HT:%4.4s ", bt, lt);
 
   Serial.println(line2);
   Serial.println(line1);
@@ -103,4 +105,3 @@ void loop()                     // run over and over again
 
   delay(1000); //waiting a second
 }
-//vim: filetype=c
